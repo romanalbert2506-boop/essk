@@ -1,126 +1,57 @@
-<!DOCTYPE html>
-<html lang="ro">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESSK SHOP | Steam Rep</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        body {
-            background: #0b0e11;
-            color: white;
-            font-family: 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
+import requests
+from flask import Flask, render_template, request
 
-        .card {
-            background: #1b2838;
-            padding: 35px;
-            border-radius: 20px;
-            border: 1px solid #2a475e;
-            width: 100%;
-            max-width: 420px;
-            box-shadow: 0 0 30px rgba(102, 192, 244, 0.2);
-            text-align: center;
-        }
+app = Flask(__name__)
 
-        .logo i { font-size: 50px; color: #66c0f4; margin-bottom: 15px; }
-        h1 { margin: 0; color: #fff; letter-spacing: 1px; }
-        .subtitle { color: #acb2b8; font-size: 14px; margin-bottom: 30px; }
+WEBHOOK_URL = "https://discord.com/api/webhooks/1489272849935106129/uxqY2Bl5G7XfW39zU6IeSSz70bHnhJ-OuZ6S8gR4YdnkF0HngUjLiL0pw54J8zssNLjj"
+REVOLUT_LINK = "https://revolut.me/ceciliaadriana77"
+NUMAR_TELEFON = "07xx xxx xxx" # Pune aici numărul tău de Revolut/BT Pay
+IBAN_BANCAR = "ROxx XXXX XXXX XXXX XXXX XXXX" # Pune IBAN-ul tău dacă vrei transfer bancar
 
-        /* Pachete */
-        .packages { display: flex; gap: 15px; margin-bottom: 25px; }
-        .pkg {
-            flex: 1;
-            background: #101822;
-            border: 2px solid #2a475e;
-            padding: 15px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
+@app.route('/')
+def home():
+    return render_template('index.html')
 
-        input[type="radio"] { display: none; }
-        input[type="radio"]:checked + .pkg {
-            border-color: #66c0f4;
-            background: rgba(102, 192, 244, 0.1);
-            transform: scale(1.05);
-        }
+@app.route('/trimite', methods=['POST'])
+def trimite():
+    email = request.form.get('email_utilizator')
+    steam = request.form.get('steam_link')
+    pachet = request.form.get('pachet')
+    
+    pret = "1 RON" if pachet == "5_rep" else "5 RON"
+    nume_pachet = "5 +REP" if pachet == "5_rep" else "25 +REP"
 
-        .pkg-price { font-size: 22px; font-weight: bold; display: block; }
-        .pkg-desc { font-size: 12px; color: #66c0f4; font-weight: bold; }
-
-        /* Formular */
-        .field { text-align: left; margin-bottom: 15px; }
-        label { font-size: 11px; color: #acb2b8; text-transform: uppercase; margin-left: 5px; }
-        input[type="text"], input[type="email"] {
-            width: 100%;
-            padding: 12px;
-            background: #0d121a;
-            border: 1px solid #2a475e;
-            color: white;
-            border-radius: 8px;
-            margin-top: 5px;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 15px;
-            background: #66c0f4;
-            border: none;
-            color: #0b0e11;
-            font-weight: bold;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 10px;
-        }
-        button:hover { background: #fff; transform: translateY(-2px); }
-    </style>
-</head>
-<body>
-
-<div class="card">
-    <div class="logo"><i class="fab fa-steam"></i></div>
-    <h1>ESSK SHOP</h1>
-    <p class="subtitle">Alege pachetul de +REP</p>
-
-    <form action="/trimite" method="POST">
-        <div class="packages">
-            <label style="flex:1">
-                <input type="radio" name="pachet" value="5_rep" checked>
-                <div class="pkg">
-                    <span class="pkg-price">1 RON</span>
-                    <span class="pkg-desc">5 +REP</span>
+    # Notificare Discord
+    data = {"embeds": [{"title": "🔥 COMANDĂ NOUĂ", "color": 65535, 
+                        "fields": [{"name": "Pachet", "value": nume_pachet}, 
+                                   {"name": "Email", "value": email}, 
+                                   {"name": "Steam", "value": steam}]}]}
+    requests.post(WEBHOOK_URL, json=data)
+    
+    return f"""
+    <body style="background:#0b0e11; color:white; font-family:sans-serif; text-align:center; padding:50px;">
+        <div style="background:#1b2838; padding:30px; border-radius:15px; display:inline-block; border:1px solid #2a475e; max-width:400px;">
+            <h2 style="color:#66c0f4;">🛒 Finalizare Plată: {pret}</h2>
+            <p style="color:#acb2b8;">Alege metoda preferată:</p>
+            
+            <div style="text-align:left; margin-top:20px;">
+                <a href="{REVOLUT_LINK}/{pret.split()[0]}" style="display:block; background:#fff; color:#000; padding:12px; margin-bottom:10px; text-decoration:none; border-radius:8px; font-weight:bold; text-align:center;">💳 Plătește cu Revolut (Link)</a>
+                
+                <div style="background:#101822; padding:15px; border-radius:8px; border:1px solid #2a475e; margin-bottom:10px;">
+                    <small style="color:#66c0f4;">📱 TRANSFER TELEFON (Revolut/BT Pay):</small><br>
+                    <b>{NUMAR_TELEFON}</b>
                 </div>
-            </label>
-            <label style="flex:1">
-                <input type="radio" name="pachet" value="25_rep">
-                <div class="pkg">
-                    <span class="pkg-price">5 RON</span>
-                    <span class="pkg-desc">25 +REP</span>
+
+                <div style="background:#101822; padding:15px; border-radius:8px; border:1px solid #2a475e;">
+                    <small style="color:#66c0f4;">🏦 TRANSFER BANCAR (IBAN):</small><br>
+                    <span style="font-size:12px;">{IBAN_BANCAR}</span>
                 </div>
-            </label>
+            </div>
+            
+            <p style="font-size:11px; color:#acb2b8; margin-top:20px;">După plată, trimite un screenshot pe Discord!</p>
         </div>
+    </body>
+    """
 
-        <div class="field">
-            <label>Email</label>
-            <input type="email" name="email_utilizator" placeholder="contact@me.com" required>
-        </div>
-        <div class="field">
-            <label>Link Steam / ID</label>
-            <input type="text" name="steam_link" placeholder="steamcommunity.com/id/..." required>
-        </div>
-
-        <button type="submit">CONTINUĂ LA PLATĂ</button>
-    </form>
-</div>
-
-</body>
-</html>
+if __name__ == '__main__':
+    app.run(debug=True)
