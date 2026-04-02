@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESSK SHOP | Steam +REP Services</title>
+    <style>
+        body {
+            background: #0b0e11 url('https://community.cloudflare.steamstatic.com/public/images/profile/2020/bg_dot_grid.png');
+            color: white;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .shop-container {
+            background: #1b2838;
+            padding: 30px;
+            border-radius: 15px;
+            border: 1px solid #2a475e;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+        }
+
+        h1 { color: #66c0f4; text-align: center; margin-bottom: 5px; }
+        .subtitle { text-align: center; color: #acb2b8; font-size: 14px; margin-bottom: 30px; }
+
+        /* Pachete Selection */
+        .packages {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .package-card {
+            flex: 1;
+            background: #101822;
+            border: 2px solid #2a475e;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .package-card:hover { border-color: #66c0f4; background: #171d25; }
+
+        input[type="radio"] { display: none; }
+
+        input[type="radio"]:checked + .package-card {
+            border-color: #66c0f4;
+            background: rgba(102, 192, 244, 0.1);
+            box-shadow: 0 0 15px rgba(102, 192, 244, 0.2);
+        }
+
+        .price { font-size: 20px; font-weight: bold; color: #fff; display: block; }
+        .desc { font-size: 13px; color: #acb2b8; }
+
+        /* Form Fields */
+        .input-box { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; color: #66c0f4; margin-bottom: 5px; }
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            background: #101822;
+            border: 1px solid #2a475e;
+            color: white;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(to right, #47bfff, #1a7bff);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover { filter: brightness(1.1); }
+    </style>
+</head>
+<body>
+
+<div class="shop-container">
+    <h1>ESSK SHOP</h1>
+    <p class="subtitle">Alege pachetul de +REP dorit:</p>
+
+    <form action="/trimite" method="POST">
+        <div class="packages">
+            <label style="flex: 1;">
+                <input type="radio" name="pachet" value="5_rep" checked>
+                <div class="package-card">
+                    <span class="price">1 RON</span>
+                    <span class="desc">5 +REP-uri</span>
+                </div>
+            </label>
+
+            <label style="flex: 1;">
+                <input type="radio" name="pachet" value="5_rep">
+                <div class="package-card">
+                    <span class="price">5 RON</span>
+                    <span class="desc">5 +REP-uri</span>
+                </div>
+            </label>
+        </div>
+
+        <div class="input-box">
+            <label>Email contact</label>
+            <input type="email" name="email_utilizator" placeholder="email@yahoo.com" required>
+        </div>
+
+        <div class="input-box">
+            <label>Link Profil Steam</label>
+            <input type="text" name="steam_link" placeholder="https://steamcommunity.com/id/..." required>
+        </div>
+
+        <button type="submit">CONTINUĂ COMANDA</button>
+    </form>
+</div>
+
+</body>
+</html>
